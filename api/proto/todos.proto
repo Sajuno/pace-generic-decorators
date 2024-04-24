@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/benschuddeboom/hexarch/services/todos";
+
+package todos;
+
+service Todos {
+  rpc GetTodo (GetTodoRequest) returns (TodoResponse);
+  rpc CreateTodo(CreateTodoRequest) returns (TodoCreateResponse);
+}
+
+message GetTodoRequest {
+  string uuid = 1;
+}
+
+message CreateTodoRequest {
+  message Todo {
+    string text = 1;
+  }
+  Todo todo = 1;
+}
+
+message TodoCreateResponse {
+  string uuid = 1;
+}
+
+message TodoResponse {
+  Todo todo = 1;
+}
+
+message Todo {
+  string uuid = 1;
+  string text = 2;
+  bool done = 3;
+  string user_id = 4;
+}
