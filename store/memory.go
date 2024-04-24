@@ -46,6 +46,8 @@ func (m *MemoryStore) GetTodo(_ context.Context, uuid string, userID string) (*t
 	}
 	m.Unlock()
 
+	slog.Debug("successfully fetched todo", "todo", td)
+
 	return todo.FromStore(td.uuid, td.userID, td.text, td.done), nil
 }
 
@@ -65,6 +67,8 @@ func (m *MemoryStore) CreateTodo(_ context.Context, todo *todo.Todo) error {
 		done:   todo.Done(),
 	}
 	m.Unlock()
+
+	slog.Debug("successfully created todo", "todo", todo)
 
 	return nil
 }
