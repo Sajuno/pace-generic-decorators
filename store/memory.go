@@ -2,9 +2,7 @@ package store
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"github.com/getsentry/sentry-go"
 	"github.com/sajuno/pace-generic-decorators/todo"
 	"log/slog"
 	"sync"
@@ -35,25 +33,17 @@ func NewMemoryStore() *MemoryStore {
 }
 
 func (m *MemoryStore) GetTodo(_ context.Context, uuid string, userID string) (*todo.Todo, error) {
-	slog.Debug("getting todo", "user_id", userID)
-
 	m.Lock()
 	td, ok := m.data[uuid]
 	if !ok || td.userID != userID {
-		slog.Error("failed to get todo")
-		sentry.CaptureException(errors.New("some sentry error"))
 		return nil, fmt.Errorf("not found")
 	}
 	m.Unlock()
-
-	slog.Debug("successfully fetched todo", "todo", td)
 
 	return todo.FromStore(td.uuid, td.userID, td.text, td.done), nil
 }
 
 func (m *MemoryStore) CreateTodo(_ context.Context, todo *todo.Todo) error {
-	slog.Debug("creating new todo", "todo", todo)
-
 	m.Lock()
 	if _, ok := m.data[todo.UUID()]; ok {
 		slog.Error("")
@@ -67,8 +57,6 @@ func (m *MemoryStore) CreateTodo(_ context.Context, todo *todo.Todo) error {
 		done:   todo.Done(),
 	}
 	m.Unlock()
-
-	slog.Debug("successfully created todo", "todo", todo)
 
 	return nil
 }

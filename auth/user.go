@@ -6,9 +6,17 @@ import (
 )
 
 type User struct {
-	UUID string
+	uuid string
 
-	// could contain any additional info about the auth (permissions, name, profiles etc.)
+	authorized bool
+}
+
+func (u User) Authorized() bool {
+	return u.Authorized()
+}
+
+func (u User) UUID() string {
+	return u.uuid
 }
 
 func UserFromContext(ctx context.Context) (User, error) {
